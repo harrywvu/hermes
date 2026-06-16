@@ -1,12 +1,51 @@
-from fastapi import FastAPI
+from __future__ import annotations
 
-app = FastAPI()
+from os import getenv
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from database import close_db, connect_db
+from routers.auth import router as auth_router
+
+app = FastAPI(title="Hermes HRMS")
+
+cors_origins = [
+    origin.strip()
+    for origin in getenv(
+        "CORS_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173",
+    ).split(",")
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins or ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.on_event("startup")
+async def startup() -> None:
+    await connect_db()
+
+
+@app.on_event("shutdown")
+async def shutdown() -> None:
+    await close_db()
 
 
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def root() -> dict[str, str]:
+    return {"message": "Hermes HRMS API"}
 
-@app.get("/message")
-async def whatsup():
-    return {"message": "What's up!"}
+
+@app.get("/health")
+async def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+app.include_router(auth_router)
