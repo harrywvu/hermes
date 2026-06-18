@@ -25,26 +25,26 @@
 ## Phase 2 — Core API Routes
 
 ### Employees `/employees`
-- [ ] `GET /employees` — return all employees
-- [ ] `POST /employees` — create employee, validate required fields
-- [ ] `GET /employees/:id` — return single employee
-- [ ] `PUT /employees/:id` — update employee
-- [ ] `DELETE /employees/:id` — delete employee (cascades to salary, attendance, payroll)
+- [x] `GET /employees` — return all employees
+- [x] `POST /employees` — create employee, validate required fields
+- [x] `GET /employees/:id` — return single employee
+- [x] `PUT /employees/:id` — update employee
+- [x] `DELETE /employees/:id` — delete employee (cascades to salary, attendance, payroll)
 
 ### Salary `/salary`
-- [ ] `POST /salary` — assign salary to employee
-- [ ] `PUT /salary/:employeeId` — update salary details
-- [ ] `GET /salary/:employeeId` — retrieve salary for employee *(optional but do it)*
+- [x] `POST /salary` — assign salary to employee
+- [x] `PUT /salary/:employeeId` — update salary details
+- [x] `GET /salary/:employeeId` — retrieve salary for employee *(optional but do it)*
 
 ### Attendance `/attendance`
-- [ ] `POST /attendance` — record attendance entry
-- [ ] `GET /attendance` — view all attendance records *(optional but do it)*
+- [x] `POST /attendance` — record attendance entry
+- [x] `GET /attendance` — view all attendance records *(optional but do it)*
 
 ### Payroll `/payroll`
-- [ ] `GET /payroll` — return all payroll records joined with employee name
+- [x] `GET /payroll` — return all payroll records joined with employee name
 
 ### Dashboard `/dashboard`
-- [ ] `GET /dashboard` — return:
+- [x] `GET /dashboard` — return:
   - Total employees
   - Active employees
   - Employees on leave
