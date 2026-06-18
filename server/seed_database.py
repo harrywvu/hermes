@@ -21,6 +21,8 @@ EMPLOYEES = [
         "full_name": "Ava Santos",
         "email": "ava.santos@hermes.test",
         "contact_number": "+63 917 000 0001",
+        "department": "Engineering",
+        "position": "Senior Developer",
         "date_hired": date(2025, 1, 6),
         "employment_status": "Active",
     },
@@ -28,6 +30,8 @@ EMPLOYEES = [
         "full_name": "Noah Reyes",
         "email": "noah.reyes@hermes.test",
         "contact_number": "+63 917 000 0002",
+        "department": "Product",
+        "position": "Product Manager",
         "date_hired": date(2025, 2, 3),
         "employment_status": "Active",
     },
@@ -35,6 +39,8 @@ EMPLOYEES = [
         "full_name": "Mia Cruz",
         "email": "mia.cruz@hermes.test",
         "contact_number": "+63 917 000 0003",
+        "department": "Design",
+        "position": "UX Designer",
         "date_hired": date(2025, 3, 10),
         "employment_status": "On Leave",
     },
@@ -42,6 +48,8 @@ EMPLOYEES = [
         "full_name": "Liam Flores",
         "email": "liam.flores@hermes.test",
         "contact_number": "+63 917 000 0004",
+        "department": "Engineering",
+        "position": "QA Engineer",
         "date_hired": date(2025, 4, 14),
         "employment_status": "Active",
     },
@@ -49,6 +57,8 @@ EMPLOYEES = [
         "full_name": "Sophia Dela Cruz",
         "email": "sophia.delacruz@hermes.test",
         "contact_number": "+63 917 000 0005",
+        "department": "Human Resources",
+        "position": "HR Specialist",
         "date_hired": date(2025, 5, 19),
         "employment_status": "Resigned",
     },
@@ -93,20 +103,26 @@ async def main() -> None:
                             full_name,
                             email,
                             contact_number,
+                            department,
+                            position,
                             date_hired,
                             employment_status
                         )
-                        VALUES ($1, $2, $3, $4, $5)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7)
                         ON CONFLICT (email)
                         DO UPDATE SET
                             full_name = EXCLUDED.full_name,
                             contact_number = EXCLUDED.contact_number,
+                            department = EXCLUDED.department,
+                            position = EXCLUDED.position,
                             date_hired = EXCLUDED.date_hired,
                             employment_status = EXCLUDED.employment_status
                         """,
                         employee["full_name"],
                         employee["email"],
                         employee["contact_number"],
+                        employee["department"],
+                        employee["position"],
                         employee["date_hired"],
                         employee["employment_status"],
                     )

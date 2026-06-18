@@ -52,8 +52,8 @@ async def create_attendance(payload: AttendanceCreate) -> AttendanceResponse:
         """,
         payload.employee_id,
         payload.date,
-        payload.time_in,
-        payload.time_out,
+        payload.time_in.replace(tzinfo=None) if payload.time_in else None,
+        payload.time_out.replace(tzinfo=None) if payload.time_out else None,
         payload.status,
     )
     if record is None:

@@ -1,18 +1,68 @@
 :root {
-  font-family:
-    'Geist', 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont,
-    sans-serif;
+  /* Colors from DESIGN.md */
+  --surface: #faf8ff;
+  --surface-dim: #d9d9e5;
+  --surface-bright: #faf8ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f3f3fe;
+  --surface-container: #ededf9;
+  --surface-container-high: #e7e7f3;
+  --surface-container-highest: #e1e2ed;
+  --on-surface: #191b23;
+  --on-surface-variant: #434655;
+  --inverse-surface: #2e3039;
+  --inverse-on-surface: #f0f0fb;
+  --outline: #737686;
+  --outline-variant: #c3c6d7;
+  --surface-tint: #0053db;
+  --primary: #004ac6;
+  --on-primary: #ffffff;
+  --primary-container: #2563eb;
+  --on-primary-container: #eeefff;
+  --inverse-primary: #b4c5ff;
+  --secondary: #565e74;
+  --on-secondary: #ffffff;
+  --secondary-container: #dae2fd;
+  --on-secondary-container: #5c647a;
+  --tertiary: #943700;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #bc4800;
+  --on-tertiary-container: #ffede6;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  --primary-fixed: #dbe1ff;
+  --primary-fixed-dim: #b4c5ff;
+  --on-primary-fixed: #00174b;
+  --on-primary-fixed-variant: #003ea8;
+  --secondary-fixed: #dae2fd;
+  --secondary-fixed-dim: #bec6e0;
+  --on-secondary-fixed: #131b2e;
+  --on-secondary-fixed-variant: #3f465c;
+  --tertiary-fixed: #ffdbcd;
+  --tertiary-fixed-dim: #ffb596;
+  --on-tertiary-fixed: #360f00;
+  --on-tertiary-fixed-variant: #7d2d00;
+  --background: #faf8ff;
+  --on-background: #191b23;
+  --surface-variant: #e1e2ed;
+
+  /* Gradients */
+  --primary-gradient: linear-gradient(90deg, #004ac6 0%, #2563eb 48%, #00d4ff 100%);
+
+  /* Typography */
+  --font-sans: 'Geist', 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
-  color: #111827;
-  background: #f6f8ff;
+  color: var(--on-background);
+  background: var(--background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --font-sans:
-    'Geist', 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont,
-    sans-serif;
 }
 
 * {

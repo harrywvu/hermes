@@ -22,6 +22,8 @@ def _employee_response(record: asyncpg.Record) -> EmployeeResponse:
         full_name=record["full_name"],
         email=record["email"],
         contact_number=record["contact_number"],
+        department=record["department"],
+        position=record["position"],
         date_hired=record["date_hired"],
         employment_status=record["employment_status"],
     )
@@ -31,7 +33,7 @@ def _employee_response(record: asyncpg.Record) -> EmployeeResponse:
 async def list_employees() -> list[EmployeeResponse]:
     rows = await fetch(
         """
-        SELECT employee_id, full_name, email, contact_number, date_hired, employment_status
+        SELECT employee_id, full_name, email, contact_number, department, position, date_hired, employment_status
         FROM public.employees
         ORDER BY employee_id
         """
@@ -48,15 +50,19 @@ async def create_employee(payload: EmployeeCreate) -> EmployeeResponse:
                 full_name,
                 email,
                 contact_number,
+                department,
+                position,
                 date_hired,
                 employment_status
             )
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING employee_id, full_name, email, contact_number, date_hired, employment_status
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING employee_id, full_name, email, contact_number, department, position, date_hired, employment_status
             """,
             payload.full_name,
             payload.email,
             payload.contact_number,
+            payload.department,
+            payload.position,
             payload.date_hired,
             payload.employment_status,
         )
@@ -79,7 +85,7 @@ async def create_employee(payload: EmployeeCreate) -> EmployeeResponse:
 async def get_employee(employee_id: int) -> EmployeeResponse:
     record = await fetchrow(
         """
-        SELECT employee_id, full_name, email, contact_number, date_hired, employment_status
+        SELECT employee_id, full_name, email, contact_number, department, position, date_hired, employment_status
         FROM public.employees
         WHERE employee_id = $1
         """,
@@ -117,7 +123,7 @@ async def update_employee(
             UPDATE public.employees
             SET {", ".join(clauses)}
             WHERE employee_id = $1
-            RETURNING employee_id, full_name, email, contact_number, date_hired, employment_status
+            RETURNING employee_id, full_name, email, contact_number, department, position, date_hired, employment_status
             """,
             *values,
         )
@@ -142,7 +148,7 @@ async def delete_employee(employee_id: int) -> EmployeeResponse:
         """
         DELETE FROM public.employees
         WHERE employee_id = $1
-        RETURNING employee_id, full_name, email, contact_number, date_hired, employment_status
+        RETURNING employee_id, full_name, email, contact_number, department, position, date_hired, employment_status
         """,
         employee_id,
     )

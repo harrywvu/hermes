@@ -55,24 +55,24 @@
 ## Phase 3 — Frontend
 
 ### Setup
-- [ ] Install dependencies (`axios`, `react-router-dom`, `react-hook-form`)
-- [ ] Set up React Router with all 6 routes
-- [ ] Create `api/client.ts` — axios instance with base URL + auth header injection
-- [ ] Auth state — store JWT in memory or localStorage, redirect to login if missing
+- [x] Install dependencies (`axios`, `react-router-dom`, `react-hook-form`)
+- [x] Set up React Router with all 6 routes
+- [x] Create `api/client.ts` — axios instance with base URL + auth header injection
+- [x] Auth state — store JWT in memory or localStorage, redirect to login if missing
 
 ### Pages
-- [ ] **Login** — email + password form, calls `POST /login`, stores token, redirects to dashboard
-- [ ] **Dashboard** — fetch `GET /dashboard`, display 4 metric cards
-- [ ] **Employees** — table of all employees, add/edit/delete actions
-- [ ] **Salary** — assign or update salary per employee
-- [ ] **Attendance** — record attendance form + attendance table
-- [ ] **Payroll** — table of payroll records with employee name + computed net salary
+- [x] **Login** — email + password form, calls `POST /login`, stores token, redirects to dashboard
+- [x] **Dashboard** — fetch `GET /dashboard`, display 4 metric cards
+- [x] **Employees** — table of all employees, add/edit/delete actions
+- [x] **Salary** — assign or update salary per employee
+- [x] **Attendance** — record attendance form + attendance table
+- [x] **Payroll** — table of payroll records with employee name + computed net salary
 
 ### Shared
-- [ ] Sidebar with Hermes branding + nav links
-- [ ] Protected route wrapper (redirect to `/login` if no token)
-- [ ] Basic error handling on all API calls (show error message on failure)
-- [ ] Basic form validation on all forms (required fields, number fields)
+- [x] Sidebar with Hermes branding + nav links
+- [x] Protected route wrapper (redirect to `/login` if no token)
+- [x] Basic error handling on all API calls (show error message on failure)
+- [x] Basic form validation on all forms (required fields, number fields)
 
 ---
 
