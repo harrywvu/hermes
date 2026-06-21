@@ -206,18 +206,6 @@ export default function SalaryPage() {
 
   return (
     <div className="page-stack">
-      <PageHeader
-        eyebrow="Compensation"
-        title="Salary management"
-        description="Configure and update salary, allowances, and deductions for each employee."
-        actions={
-          selectedEmployee && (
-            <ActionButton icon={faBan} onClick={clearSelection}>
-              Clear selection
-            </ActionButton>
-          )
-        }
-      />
 
       <section className="metric-grid metric-grid--compact">
         <SectionCard compact>

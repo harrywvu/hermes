@@ -45,7 +45,7 @@ async def shutdown() -> None:
 
 @app.get("/")
 async def root() -> dict[str, str]:
-    return {"message": "Hermes HRMS API"}
+    return {"message": "Hermes API"}
 
 
 @app.get("/health")

@@ -6,8 +6,10 @@ import {
   faUserCheck,
   faUserClock,
   faUsers,
+  faCalendarAlt,
+  faFileInvoiceDollar,
 } from '@fortawesome/free-solid-svg-icons'
-import { ActionButton, Badge, EmptyState, MetricCard, PageHeader, SectionCard } from '../components/ui'
+import { ActionButton, Badge, EmptyState, MetricCard, SectionCard } from '../components/ui'
 import {
   fetchDashboard,
   formatMoney,
@@ -93,14 +95,23 @@ export default function DashboardPage() {
     return null
   }
 
+  function statusTone(status: string) {
+    switch (status) {
+      case 'Present':
+        return 'success'
+      case 'Late':
+        return 'warning'
+      case 'Absent':
+        return 'danger'
+      case 'On Leave':
+        return 'info'
+      default:
+        return 'neutral'
+    }
+  }
+
   return (
     <div className="page-stack">
-      <PageHeader
-        eyebrow="Overview"
-        title="Dashboard"
-        description="Live workspace metrics from the FastAPI backend."
-        actions={<Badge tone="info">Live data</Badge>}
-      />
 
       <section className="metric-grid metric-grid--dashboard">
         <MetricCard
@@ -154,14 +165,69 @@ export default function DashboardPage() {
           </div>
 
           <div className="insight-list">
-            <article>
+            <article className="insight-card">
               <strong>Employee directory</strong>
               <p>{data.total_employees} total employee records ready for management.</p>
             </article>
-            <article>
+            <article className="insight-card">
               <strong>Payroll snapshot</strong>
               <p>{formatMoney(data.total_monthly_payroll)} in computed monthly payroll.</p>
             </article>
+          </div>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        title="Recent Activity"
+        description="Latest attendance and payroll entries"
+      >
+        <div className="activity-grid">
+          <div className="activity-column">
+            <h3 className="activity-title">Recent Attendance</h3>
+            {data.recent_attendance.length > 0 ? (
+              <div className="activity-list">
+                {data.recent_attendance.map((record, index) => (
+                  <div key={index} className="activity-item">
+                    <div className="activity-info">
+                      <strong className="activity-name">{record.employee_name}</strong>
+                      <span className="activity-date">{record.date}</span>
+                    </div>
+                    <Badge tone={statusTone(record.status)}>
+                      {record.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                description="No attendance records yet"
+                icon={faCalendarAlt}
+                title="No recent attendance"
+              />
+            )}
+          </div>
+          
+          <div className="activity-column">
+            <h3 className="activity-title">Recent Payroll</h3>
+            {data.recent_payroll.length > 0 ? (
+              <div className="activity-list">
+                {data.recent_payroll.map((record, index) => (
+                  <div key={index} className="activity-item">
+                    <div className="activity-info">
+                      <strong className="activity-name">{record.employee_name}</strong>
+                      <span className="activity-date">{record.payroll_date}</span>
+                    </div>
+                    <strong className="activity-amount">{formatMoney(record.net_salary)}</strong>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                description="No payroll records yet"
+                icon={faFileInvoiceDollar}
+                title="No recent payroll"
+              />
+            )}
           </div>
         </div>
       </SectionCard>

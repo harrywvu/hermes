@@ -65,10 +65,12 @@ function emptyValues(): AttendanceFormValues {
 export default function AttendancePage() {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [records, setRecords] = useState<AttendanceRecord[]>([])
+  const [filteredRecords, setFilteredRecords] = useState<AttendanceRecord[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [filter, setFilter] = useState<'today' | 'week' | 'month' | 'all'>('all')
 
   const {
     register,
@@ -115,6 +117,37 @@ export default function AttendancePage() {
     }
   }, [])
 
+  useEffect(() => {
+    // Apply filter when records or filter changes
+    let filtered = [...records]
+    
+    if (filter === 'today') {
+      const today = new Date().toDateString()
+      filtered = filtered.filter(record => new Date(record.date).toDateString() === today)
+    } else if (filter === 'week') {
+      const now = new Date()
+      const startOfWeek = new Date(now)
+      startOfWeek.setDate(now.getDate() - now.getDay())
+      const endOfWeek = new Date(startOfWeek)
+      endOfWeek.setDate(startOfWeek.getDate() + 6)
+      
+      filtered = filtered.filter(record => {
+        const recordDate = new Date(record.date)
+        return recordDate >= startOfWeek && recordDate <= endOfWeek
+      })
+    } else if (filter === 'month') {
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = now.getMonth()
+      filtered = filtered.filter(record => {
+        const recordDate = new Date(record.date)
+        return recordDate.getFullYear() === year && recordDate.getMonth() === month
+      })
+    }
+    
+    setFilteredRecords(filtered)
+  }, [records, filter])
+
   function resetForm() {
     setNotice('')
     reset(emptyValues())
@@ -125,14 +158,11 @@ export default function AttendancePage() {
     setNotice('')
 
     try {
-      const dateObj = new Date(values.date + 'T' + (values.time_in || '00:00'))
-      const dateObjOut = new Date(values.date + 'T' + (values.time_out || '00:00'))
-
       const payload = {
         employee_id: parseInt(values.employee_id),
         date: values.date,
-        time_in: values.time_in ? dateObj.toISOString() : null,
-        time_out: values.time_out ? dateObjOut.toISOString() : null,
+        time_in: values.time_in ? `${values.date}T${values.time_in}:00` : null,
+        time_out: values.time_out ? `${values.date}T${values.time_out}:00` : null,
         status: values.status,
       }
 
@@ -175,15 +205,10 @@ export default function AttendancePage() {
     )
   }
 
-  const recordsByDate = records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const recordsByDate = filteredRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
     <div className="page-stack">
-      <PageHeader
-        eyebrow="Workforce tracking"
-        title="Attendance"
-        description="Log and monitor employee attendance records, including time in/out and status."
-      />
 
       <section className="metric-grid metric-grid--compact">
         <SectionCard compact>
@@ -213,6 +238,20 @@ export default function AttendancePage() {
         <SectionCard
           title="Attendance records"
           description="View recent attendance history. Most recent entries appear first."
+          actions={
+            <div className="filter-controls">
+              <select 
+                className="filter-select"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value as any)}
+              >
+                <option value="all">All time</option>
+                <option value="today">Today</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+              </select>
+            </div>
+          }
         >
           {records.length > 0 ? (
             <DataTable ariaLabel="Attendance records table">

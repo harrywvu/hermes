@@ -52,6 +52,8 @@ CREATE TABLE public.attendance (
     time_out    TIMESTAMP,
     status      attendance_status NOT NULL,
 
+    CONSTRAINT uq_attendance_employee_date UNIQUE (employee_id, date),
+
     CONSTRAINT fk_attendance_employee
         FOREIGN KEY (employee_id)
         REFERENCES public.employees (employee_id)

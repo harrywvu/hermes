@@ -36,6 +36,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     mode: 'onTouched',
@@ -63,6 +64,11 @@ export default function LoginPage() {
     }
   }
 
+  function fillDemoCredentials() {
+    setValue('email', 'admin@test.com', { shouldValidate: false })
+    setValue('password', 'admin123', { shouldValidate: false })
+  }
+
   if (!isReady) {
     return <div className="route-loading">Loading workspace…</div>
   }
@@ -79,113 +85,115 @@ export default function LoginPage() {
         <span className="orb orb-c" />
       </div>
 
-      <section className="auth-shell auth-shell--split">
-        <aside className="auth-marketing surface-card surface-card--elevated">
-          <div className="brand-lockup brand-lockup--wide">
-            <div className="brand-mark brand-mark--large" aria-hidden="true">
-              <img alt="Hermes" src={hermesLogo} />
-            </div>
-            <div className="brand-copy">
-              <p className="eyebrow">Hermes HRMS</p>
-              <h1>Fast, precise workforce operations.</h1>
-              <p>
+      <section className="auth-shell">
+        <div className="login-container">
+          <aside className="login-brand">
+            <div className="login-brand-content">
+              <div className="brand-mark" aria-hidden="true">
+                <img alt="Hermes" src={hermesLogo} />
+              </div>
+              <h1 className="login-brand-title">Hermes</h1>
+              <p className="login-brand-tagline">
+                Fast, precise workforce operations.
+              </p>
+              <p className="login-brand-desc">
                 A premium HRMS workspace for employees, salaries, attendance, and payroll.
               </p>
+
+              <div className="login-features">
+                <div className="login-feature">
+                  <span className="login-feature-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faStar} />
+                  </span>
+                  <div>
+                    <strong>Clean workflows</strong>
+                    <p>Focused surfaces and fast actions keep HR tasks low-friction.</p>
+                  </div>
+                </div>
+                <div className="login-feature">
+                  <span className="login-feature-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faShieldHalved} />
+                  </span>
+                  <div>
+                    <strong>Protected access</strong>
+                    <p>JWT-backed sessions keep each workspace section private.</p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </aside>
+
+          <div className="login-form-panel">
+            <div className="login-form-header">
+              <p className="eyebrow">Sign in</p>
+              <h2>Welcome back</h2>
+              <p>Sign in to access the Hermes workspace.</p>
+
+              <button className="demo-btn" type="button" onClick={fillDemoCredentials}>
+                Use demo credentials
+              </button>
+            </div>
+
+            <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+              <label className="field">
+                <span className="field-label">Email</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faEnvelope} />
+                  </span>
+                  <input
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    type="email"
+                    {...register('email', {
+                      required: 'Email is required.',
+                    })}
+                  />
+                </div>
+                {errors.email ? <span className="field-error">{errors.email.message}</span> : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Password</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faLock} />
+                  </span>
+                  <input
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    type={showPassword ? 'text' : 'password'}
+                    {...register('password', {
+                      required: 'Password is required.',
+                    })}
+                  />
+                  <button
+                    className="input-action"
+                    type="button"
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
+                {errors.password ? (
+                  <span className="field-error">{errors.password.message}</span>
+                ) : null}
+              </label>
+
+              <button className="submit-button submit-button--wide" type="submit" disabled={isSubmitting}>
+                <span>{isSubmitting ? 'Signing in' : 'Sign in to Hermes'}</span>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </button>
+
+              <div className="status-panel" aria-live="polite">
+                {submitError ? (
+                  <p className="status status--error">{submitError}</p>
+                ) : null}
+              </div>
+            </form>
           </div>
-
-          <div className="marketing-highlights">
-            <div className="marketing-highlight">
-              <span className="marketing-highlight-icon" aria-hidden="true">
-                <FontAwesomeIcon icon={faStar} />
-              </span>
-              <div>
-                <strong>Clean workflows</strong>
-                <p>Focused surfaces and fast actions keep HR tasks low-friction.</p>
-              </div>
-            </div>
-            <div className="marketing-highlight">
-              <span className="marketing-highlight-icon" aria-hidden="true">
-                <FontAwesomeIcon icon={faShieldHalved} />
-              </span>
-              <div>
-                <strong>Protected access</strong>
-                <p>JWT-backed sessions keep each workspace section private.</p>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <section className="auth-card auth-card--login surface-card surface-card--elevated">
-          <div className="auth-card-header">
-            <p className="eyebrow">Sign in</p>
-            <h2>Welcome back</h2>
-            <p>Use the seeded admin account to enter the Hermes workspace.</p>
-          </div>
-
-          <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-            <label className="field">
-              <span className="field-label">Email</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faEnvelope} />
-                </span>
-                <input
-                  autoComplete="email"
-                  placeholder="admin@test.com"
-                  type="email"
-                  {...register('email', {
-                    required: 'Email is required.',
-                  })}
-                />
-              </div>
-              {errors.email ? <span className="field-error">{errors.email.message}</span> : null}
-            </label>
-
-            <label className="field">
-              <span className="field-label">Password</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faLock} />
-                </span>
-                <input
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  type={showPassword ? 'text' : 'password'}
-                  {...register('password', {
-                    required: 'Password is required.',
-                  })}
-                />
-                <button
-                  className="input-action"
-                  type="button"
-                  onClick={() => setShowPassword((value) => !value)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                </button>
-              </div>
-              {errors.password ? (
-                <span className="field-error">{errors.password.message}</span>
-              ) : null}
-            </label>
-
-            <button className="submit-button submit-button--wide" type="submit" disabled={isSubmitting}>
-              <span>{isSubmitting ? 'Signing in' : 'Sign in to Hermes'}</span>
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-
-            <div className="status-panel" aria-live="polite">
-              {submitError ? (
-                <p className="status status--error">{submitError}</p>
-              ) : (
-                <p className="status status--quiet">
-                  Seeded admin credentials are ready for the workspace demo.
-                </p>
-              )}
-            </div>
-          </form>
-        </section>
+        </div>
       </section>
     </main>
   )

@@ -72,6 +72,7 @@ function emptyValues(): EmployeeFormValues {
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState('')
@@ -125,12 +126,14 @@ export default function EmployeesPage() {
 
   function beginCreate() {
     setSelectedEmployee(null)
+    setIsCreating(true)
     setNotice('')
     reset(emptyValues())
   }
 
   function beginEdit(employee: Employee) {
     setSelectedEmployee(employee)
+    setIsCreating(false)
     setNotice('')
     reset({
       full_name: employee.full_name,
@@ -228,12 +231,6 @@ export default function EmployeesPage() {
 
   return (
     <div className="page-stack">
-      <PageHeader
-        eyebrow="People operations"
-        title="Employees"
-        description="Create, update, and delete employees from the workspace directory."
-        actions={<ActionButton icon={faPlus} onClick={beginCreate}>Add employee</ActionButton>}
-      />
 
       <section className="metric-grid metric-grid--compact">
         <SectionCard compact>
@@ -319,9 +316,9 @@ export default function EmployeesPage() {
           ) : (
             <EmptyState
               action={<ActionButton icon={faPlus} onClick={beginCreate}>Add employee</ActionButton>}
-              description="No employees have been added yet."
+              description="Select an employee to edit or add a new record to the directory."
               icon={faUsers}
-              title="No employee records"
+              title="Employee actions"
             />
           )}
         </SectionCard>
@@ -337,109 +334,129 @@ export default function EmployeesPage() {
             )
           }
         >
-          <form className="form-grid" onSubmit={onSubmit}>
-            <label className="field">
-              <span className="field-label">Full name</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faUserCheck} />
-                </span>
-                <input
-                  placeholder="Ava Santos"
-                  {...register('full_name', { required: 'Full name is required.' })}
-                />
+          {selectedEmployee || isCreating ? (
+            <form className="form-grid" onSubmit={onSubmit}>
+              <label className="field">
+                <span className="field-label">Full name</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faUserCheck} />
+                  </span>
+                  <input
+                    placeholder="Ava Santos"
+                    {...register('full_name', { required: 'Full name is required.' })}
+                  />
+                </div>
+                {errors.full_name ? <span className="field-error">{errors.full_name.message}</span> : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Email</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faEnvelope} />
+                  </span>
+                  <input
+                    placeholder="ava.santos@hermes.test"
+                    type="email"
+                    {...register('email', { required: 'Email is required.' })}
+                  />
+                </div>
+                {errors.email ? <span className="field-error">{errors.email.message}</span> : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Department</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faBuilding} />
+                  </span>
+                  <input
+                    placeholder="Engineering"
+                    {...register('department', { required: 'Department is required.' })}
+                  />
+                </div>
+                {errors.department ? <span className="field-error">{errors.department.message}</span> : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Position</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faUserTie} />
+                  </span>
+                  <input
+                    placeholder="Senior Developer"
+                    {...register('position', { required: 'Position is required.' })}
+                  />
+                </div>
+                {errors.position ? <span className="field-error">{errors.position.message}</span> : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Contact number</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faPhone} />
+                  </span>
+                  <input
+                    placeholder="+63 917 000 0001 or 09170000001"
+                    {...register('contact_number', {
+                      pattern: {
+                        value: /^(?:\+63\s9\d{2}\s\d{3}\s\d{4}|09\d{9})$/,
+                        message: 'Format must be +63 9XX XXX XXXX or 09XXXXXXXXX',
+                      },
+                    })}
+                  />
+                </div>
+                {errors.contact_number ? (
+                  <span className="field-error">{errors.contact_number.message}</span>
+                ) : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Date hired</span>
+                <div className="input-shell">
+                  <span className="input-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faCalendarDays} />
+                  </span>
+                  <input
+                    type="date"
+                    {...register('date_hired', { required: 'Date hired is required.' })}
+                  />
+                </div>
+                {errors.date_hired ? <span className="field-error">{errors.date_hired.message}</span> : null}
+              </label>
+
+              <label className="field">
+                <span className="field-label">Employment status</span>
+                <select className="select-field" {...register('employment_status', { required: true })}>
+                  {statusOptions.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="form-actions">
+                <button className="submit-button" type="submit" disabled={isSaving}>
+                  <span>{isSaving ? 'Saving' : selectedEmployee ? 'Update employee' : 'Create employee'}</span>
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+                <button className="secondary-button" type="button" onClick={beginCreate}>
+                  Reset form
+                </button>
               </div>
-              {errors.full_name ? <span className="field-error">{errors.full_name.message}</span> : null}
-            </label>
-
-            <label className="field">
-              <span className="field-label">Email</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faEnvelope} />
-                </span>
-                <input
-                  placeholder="ava.santos@hermes.test"
-                  type="email"
-                  {...register('email', { required: 'Email is required.' })}
-                />
-              </div>
-              {errors.email ? <span className="field-error">{errors.email.message}</span> : null}
-            </label>
-
-            <label className="field">
-              <span className="field-label">Department</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faBuilding} />
-                </span>
-                <input
-                  placeholder="Engineering"
-                  {...register('department', { required: 'Department is required.' })}
-                />
-              </div>
-              {errors.department ? <span className="field-error">{errors.department.message}</span> : null}
-            </label>
-
-            <label className="field">
-              <span className="field-label">Position</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faUserTie} />
-                </span>
-                <input
-                  placeholder="Senior Developer"
-                  {...register('position', { required: 'Position is required.' })}
-                />
-              </div>
-              {errors.position ? <span className="field-error">{errors.position.message}</span> : null}
-            </label>
-
-            <label className="field">
-              <span className="field-label">Contact number</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faPhone} />
-                </span>
-                <input placeholder="+63 917 000 0001" {...register('contact_number')} />
-              </div>
-            </label>
-
-            <label className="field">
-              <span className="field-label">Date hired</span>
-              <div className="input-shell">
-                <span className="input-icon" aria-hidden="true">
-                  <FontAwesomeIcon icon={faCalendarDays} />
-                </span>
-                <input
-                  type="date"
-                  {...register('date_hired', { required: 'Date hired is required.' })}
-                />
-              </div>
-              {errors.date_hired ? <span className="field-error">{errors.date_hired.message}</span> : null}
-            </label>
-
-            <label className="field">
-              <span className="field-label">Employment status</span>
-              <select className="select-field" {...register('employment_status', { required: true })}>
-                {statusOptions.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <div className="form-actions">
-              <button className="submit-button" type="submit" disabled={isSaving}>
-                <span>{isSaving ? 'Saving' : selectedEmployee ? 'Update employee' : 'Create employee'}</span>
-                <FontAwesomeIcon icon={faPlus} />
-              </button>
-              <button className="secondary-button" type="button" onClick={beginCreate}>
-                Reset form
-              </button>
-            </div>
-          </form>
+            </form>
+          ) : (
+            <EmptyState
+              action={<ActionButton icon={faPlus} onClick={beginCreate}>Add employee</ActionButton>}
+              description="Select an employee to edit or add a new record to the directory."
+              icon={faUsers}
+              title="Employee actions"
+            />
+          )}
 
           {notice ? <p className="inline-status inline-status--success">{notice}</p> : null}
           {error && employees.length > 0 ? <p className="inline-status inline-status--error">{error}</p> : null}

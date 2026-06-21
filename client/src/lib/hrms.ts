@@ -8,11 +8,25 @@ export type LoginResponse = {
   email: string
 }
 
+export type RecentAttendanceRecord = {
+  employee_name: string
+  date: string
+  status: string
+}
+
+export type RecentPayrollRecord = {
+  employee_name: string
+  net_salary: string | number
+  payroll_date: string
+}
+
 export type DashboardResponse = {
   total_employees: number
   active_employees: number
   employees_on_leave: number
   total_monthly_payroll: string | number
+  recent_attendance: RecentAttendanceRecord[]
+  recent_payroll: RecentPayrollRecord[]
 }
 
 export type EmploymentStatus = 'Active' | 'Resigned' | 'On Leave'
@@ -51,9 +65,9 @@ export type Salary = {
 
 export type SalaryCreatePayload = {
   employee_id: number
-  basic_salary: string
-  allowance: string
-  deductions: string
+  basic_salary: string | number
+  allowance: string | number
+  deductions: string | number
 }
 
 export type SalaryUpdatePayload = Partial<Omit<SalaryCreatePayload, 'employee_id'>>

@@ -1,4 +1,4 @@
-# 🏛️ Hermes HRMS — Build Checklist
+# 🏛️ Hermes — Build Checklist
 
 **Deadline:** June 21, 2026
 **Stack:** React (TS) + Vite · FastAPI · Neon (PostgreSQL)

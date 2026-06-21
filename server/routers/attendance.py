@@ -38,6 +38,17 @@ async def create_attendance(payload: AttendanceCreate) -> AttendanceResponse:
             detail="Employee not found",
         )
 
+    existing = await fetchrow(
+        "SELECT id FROM public.attendance WHERE employee_id = $1 AND date = $2",
+        payload.employee_id,
+        payload.date,
+    )
+    if existing is not None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An attendance record already exists for this employee on this date",
+        )
+
     record = await fetchrow(
         """
         INSERT INTO public.attendance (
