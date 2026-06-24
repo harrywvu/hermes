@@ -1,7 +1,6 @@
 .env
-build.md
-tables.sql
+.build.md
+.tables.sql
 docs
-readlist.md
-AGENTS.md
-
+.readlist.md
+.AGENTS.md
