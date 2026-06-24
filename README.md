@@ -2,7 +2,7 @@
 
 A web-based HR management system for handling employees, salaries, attendance, and payroll. Designed for HR professionals and administrators.
 
-**Live Demo:** [https://hermes-xi.vercel.app](https://hermes-xi.vercel.app)
+**Live Demo:** [https://hermes-iota-five.vercel.app](https://hermes-iota-five.vercel.app)
 
 ---
 
