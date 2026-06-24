@@ -19,14 +19,14 @@ cors_origins = [
     origin.strip()
     for origin in getenv(
         "CORS_ORIGINS",
-        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173",
+        "*",
     ).split(",")
     if origin.strip()
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins or ["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,12 +35,18 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup() -> None:
-    await connect_db()
+    try:
+        await connect_db()
+    except Exception as exc:
+        print(f"[startup] DB connection failed: {exc}")
 
 
 @app.on_event("shutdown")
 async def shutdown() -> None:
-    await close_db()
+    try:
+        await close_db()
+    except Exception as exc:
+        print(f"[shutdown] DB close error: {exc}")
 
 
 @app.get("/")
