@@ -158,6 +158,12 @@ async def update_salary(employee_id: int, payload: SalaryUpdate) -> SalaryRespon
             allowance = updates.get("allowance", existing["allowance"])
             deductions = updates.get("deductions", existing["deductions"])
 
+            if basic_salary + allowance - deductions <= 0:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Net salary must be greater than 0",
+                )
+
             record = await connection.fetchrow(
                 """
                 UPDATE public.salaries

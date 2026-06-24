@@ -13,9 +13,16 @@ from database import fetchrow, get_pool
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-JWT_SECRET = os.getenv("JWT_SECRET", "change-me")
-JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
+JWT_SECRET = os.getenv("JWT_SECRET")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+
+if not JWT_SECRET or not JWT_ALGORITHM or not ACCESS_TOKEN_EXPIRE_MINUTES:
+    raise RuntimeError(
+        "JWT_SECRET, JWT_ALGORITHM, and ACCESS_TOKEN_EXPIRE_MINUTES must be set"
+    )
+
+ACCESS_TOKEN_EXPIRE_MINUTES = int(ACCESS_TOKEN_EXPIRE_MINUTES)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

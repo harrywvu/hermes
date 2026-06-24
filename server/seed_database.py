@@ -9,7 +9,7 @@ import asyncpg
 import bcrypt
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 
 DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("DSN")
 

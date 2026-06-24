@@ -13,7 +13,6 @@ import {
   Badge,
   EmptyState,
   DataTable,
-  PageHeader,
   SectionCard,
 } from '../components/ui'
 import {
@@ -76,6 +75,7 @@ export default function AttendancePage() {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<AttendanceFormValues>({
     mode: 'onTouched',
@@ -351,9 +351,19 @@ export default function AttendancePage() {
                 </span>
                 <input
                   type="time"
-                  {...register('time_out')}
+                  {...register('time_out', {
+                    validate: (value) => {
+                      if (!value) return true
+                      const timeIn = getValues('time_in')
+                      if (!timeIn) return true
+                      return value > timeIn || 'Time out must be after time in'
+                    },
+                  })}
                 />
               </div>
+              {errors.time_out ? (
+                <span className="field-error">{errors.time_out.message}</span>
+              ) : null}
             </label>
 
             <label className="field">

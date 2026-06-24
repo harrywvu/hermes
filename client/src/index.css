@@ -203,6 +203,10 @@ a {
   margin-bottom: 1rem;
 }
 
+.section-card-actions {
+  flex-shrink: 0;
+}
+
 .section-card-header > div {
   flex: 1;
 }
@@ -597,9 +601,8 @@ a {
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
-  background: var(--primary-container);
-  color: var(--on-primary-container);
   font-size: 1.25rem;
+  color: var(--on-surface-variant);
 }
 
 .metric-label {
@@ -742,6 +745,7 @@ a {
   position: relative;
   display: flex;
   align-items: center;
+  gap: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid var(--outline-variant);
   background: var(--surface-container-low);
@@ -765,7 +769,7 @@ a {
 .input-shell input,
 .input-shell select {
   flex: 1;
-  padding: 0.75rem 0.75rem 0.75rem 0;
+  padding: 0.75rem 0.75rem 0.75rem 0.5rem;
   border: none;
   background: transparent;
   color: var(--on-surface);

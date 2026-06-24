@@ -15,7 +15,6 @@ import {
   Badge,
   EmptyState,
   DataTable,
-  PageHeader,
   SectionCard,
 } from '../components/ui'
 import {
@@ -146,9 +145,9 @@ export default function SalaryPage() {
     setNotice('')
 
     try {
-      const basic = parseFloat(values.basic_salary)
-      const allowance = parseFloat(values.allowance) || 0
-      const deductions = parseFloat(values.deductions) || 0
+      const basic = Math.max(0.01, parseFloat(values.basic_salary) || 0)
+      const allowance = Math.max(0, parseFloat(values.allowance) || 0)
+      const deductions = Math.max(0, parseFloat(values.deductions) || 0)
 
       if (selectedSalary) {
         await updateSalary(selectedEmployee.employee_id, {
@@ -315,7 +314,7 @@ export default function SalaryPage() {
                     min="0"
                     {...register('basic_salary', {
                       required: 'Basic salary is required.',
-                      min: { value: 0, message: 'Basic salary must be positive.' },
+                      min: { value: 0.01, message: 'Basic salary must be greater than 0' },
                     })}
                   />
                 </div>
@@ -386,8 +385,14 @@ export default function SalaryPage() {
                 </div>
               </div>
 
+              {netSalary <= 0 ? (
+                <p className="inline-status inline-status--error">
+                  Net salary must be greater than 0. Adjust basic salary, allowance, or deductions.
+                </p>
+              ) : null}
+
               <div className="form-actions">
-                <button className="submit-button" type="submit" disabled={isSaving}>
+                <button className="submit-button" type="submit" disabled={isSaving || netSalary <= 0}>
                   <span>{isSaving ? 'Saving' : selectedSalary ? 'Update salary' : 'Create salary'}</span>
                   <FontAwesomeIcon icon={faSave} />
                 </button>
